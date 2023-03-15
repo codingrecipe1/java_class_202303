@@ -1,7 +1,10 @@
 package day15_20230314;
 
+import java.util.Objects;
+
 public class StudentDTO {
 	private Long id; // 관리번호
+//	private int num;
 	private String studentNumber; // 학번
 	private String studentName; // 이름
 	private String studentMajor; // 전공
@@ -43,8 +46,25 @@ public class StudentDTO {
 		return "StudentDTO [id=" + id + ", studentNumber=" + studentNumber + ", studentName=" + studentName
 				+ ", studentMajor=" + studentMajor + ", studentMobile=" + studentMobile + "]";
 	}
-	
-	
+	// 두 객체의 필드값이 모두 일치하는지 판단하려면 hashCode(), equals() 메서드를 재정의하자 
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, studentMajor, studentMobile, studentName, studentNumber);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StudentDTO other = (StudentDTO) obj;
+		return Objects.equals(id, other.id) && Objects.equals(studentMajor, other.studentMajor)
+				&& Objects.equals(studentMobile, other.studentMobile) && Objects.equals(studentName, other.studentName)
+				&& Objects.equals(studentNumber, other.studentNumber);
+	}
+
 	
 	
 	
