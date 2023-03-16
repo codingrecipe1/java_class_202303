@@ -1,6 +1,7 @@
 package day16_20230315;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class BoardService {
@@ -21,14 +22,16 @@ public class BoardService {
 			System.out.println("게시글 등록실패ㅜ");
 		}
 	}
+	
 	public void findAll() {
-		List<BoardDTO> list = br.findAll();
+		Map<String, BoardDTO> boardMap = br.findAll();
 		System.out.println("글번호\t제목\t\t작성자\t조회수\t게시일");
 		System.out.println("--------------------------------------");
-		for(BoardDTO b : list) {
-			b.print();
+		for(String key: boardMap.keySet()) {
+			boardMap.get(key).print();
 		}
 	}
+	
 	public void findById() {
 		System.out.print("읽을 글번호> ");
 		String bno = sc.next();
@@ -42,6 +45,7 @@ public class BoardService {
 			boardDTO.print();
 		}
 	}
+	
 	public void update() {
 		System.out.print("수정할 글번호> ");
 		String bno = sc.next();sc.nextLine();
@@ -49,19 +53,23 @@ public class BoardService {
 		if(b == null) {
 			System.out.println("조회할 수 없는 글번호 입니다");
 		}else {
-			BoardDTO boardDTO = new BoardDTO();
+//			BoardDTO boardDTO = new BoardDTO();
 			System.out.print("수정할 제목> ");
-			boardDTO.setTitle(sc.nextLine());
+//			boardDTO.setTitle(sc.nextLine());
+			String updateTitle = sc.nextLine();
 			System.out.print("수정할 작성자> ");
-			boardDTO.setWriter(sc.next());
-			sc.nextLine();
-			if(br.update(boardDTO, bno)) {
+//			boardDTO.setWriter(sc.next());
+			String updateWriter = sc.nextLine();
+//			BoardDTO boardDTO = new BoardDTO(updateTitle, updateWriter);
+			if(br.updateNew(bno, updateTitle, updateWriter)) {
+//			if(br.update(boardDTO, bno)) {
 				System.out.println("업데이트 성공");
 			}else {
 				System.out.println("업데이트 실패");
 			}
 		}
 	}
+	
 	public void delete() {
 		System.out.print("삭제할 글번호> ");
 		String bno = sc.next();sc.nextLine();
@@ -72,8 +80,34 @@ public class BoardService {
 		}
 	}
 	
+	public void testData() {
+		for(int i=1; i<=5; i++) {
+			BoardDTO boardDTO = new BoardDTO();
+//			boardDTO.setTitle("title" + i);
+			String newTitle = "title" + i;
+			boardDTO.setTitle(newTitle);
+			boardDTO.setWriter("writer" + i);
+			br.save(boardDTO);
+		}
+		
+	}
 	
+	public void search() {
+		System.out.print("검색어> ");
+		String q = sc.nextLine();
+		List<BoardDTO> searchList = br.search(q);
+		for(BoardDTO b: searchList) {
+			b.print();
+		}
+	}
 }
+
+
+
+
+
+
+
 
 
 

@@ -1,45 +1,77 @@
 package day16_20230315;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BoardRepository {
-	private List<BoardDTO> list = new ArrayList<>();
+//	private List<BoardDTO> list = new ArrayList<>();
+	private Map<String, BoardDTO> boardMap = new HashMap<>();
 	
 	public boolean save(BoardDTO boardDTO) {
-		boolean a = list.add(null); 
-		return a;
+		BoardDTO result = boardMap.put(boardDTO.getBno(), boardDTO);
+		if(result == null) {
+			return true;
+		} else {
+			return false;			
+		}
 	}
 	
-	public List<BoardDTO> findAll(){
-		return list;
+	public Map<String, BoardDTO> findAll(){
+		return boardMap;
 	}
+	
 	public BoardDTO findById(String bno) {
-		for(BoardDTO b : list) {
-			if(b.getBno().equals(bno)) {
-				return b;
+		for(String key: boardMap.keySet()) {
+			if(bno.equals(boardMap.get(key).getBno())) {
+				return boardMap.get(key);
 			}
 		}
 		return null;
 	}
+	
 	public boolean update(BoardDTO boardDTO, String bno) {
-		for(BoardDTO b : list) {
-			if(b.getBno().equals(bno)) {
-				b.setTitle(boardDTO.getTitle());
-				b.setWriter(boardDTO.getWriter());
+		for(String key: boardMap.keySet()) {
+			if(bno.equals(boardMap.get(key).getBno())) {
+				boardMap.get(key).setTitle(boardDTO.getTitle());
+				boardMap.get(key).setWriter(boardDTO.getWriter());
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean delete(String bno) {
-		for(BoardDTO b : list) {
-			if(b.getBno().equals(bno)) {
-				list.remove(b);
+	
+	public boolean updateNew(String bno, String updateTitle, String updateWriter) {
+		for(String key: boardMap.keySet()) {
+			if(bno.equals(boardMap.get(key).getBno())) {
+				boardMap.get(key).setTitle(updateTitle);
+				boardMap.get(key).setWriter(updateWriter);
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public boolean delete(String bno) {
+		for(String key: boardMap.keySet()) {
+			if(bno.equals(boardMap.get(key).getBno())) {
+				boardMap.remove(key);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public List<BoardDTO> search(String q) {
+		// 검색결과를 담을 리스트
+		List<BoardDTO> searchList = new ArrayList<>();
+		for(String key: boardMap.keySet()) {
+			if(q.equals(boardMap.get(key).getWriter())) {
+//				searchList.add(boardMap.get(key));
+				
+				BoardDTO result = boardMap.get(key);
+				searchList.add(result);
+			}
+		}
+		return searchList;
 	}
 	
 	
@@ -48,3 +80,13 @@ public class BoardRepository {
 	
 	
 }
+
+
+
+
+
+
+
+
+
+
