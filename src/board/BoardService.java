@@ -1,12 +1,7 @@
-package day16_20230315;
+package board;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-
-import board.BoardDTO;
 
 public class BoardService {
 	BoardRepository br = new BoardRepository();
@@ -14,6 +9,7 @@ public class BoardService {
 	
 	public void save() {
 		BoardDTO boardDTO = new BoardDTO();
+		System.out.println("BoardDTO 객체 생성 후" + boardDTO);
 		System.out.print("제목> ");
 		boardDTO.setTitle(sc.nextLine());
 		System.out.print("작성자> ");
@@ -28,14 +24,13 @@ public class BoardService {
 	}
 	
 	public void findAll() {
-		Map<String, BoardDTO> boardMap = br.findAll();
-		System.out.println("글번호\t제목\t작성자\t조회수\t게시일");
+		List<BoardDTO> list = br.findAll();
+		System.out.println("글번호\t제목\t\t작성자\t조회수\t게시일");
 		System.out.println("--------------------------------------");
-		List<String> keySet = new ArrayList<>(boardMap.keySet());
-		Collections.sort(keySet);
-		for(String key : keySet) {
-//		for(String key : boardMap.keySet()) {
-			boardMap.get(key).print();
+		for(BoardDTO b : list) {
+			b.print();
+			// toString 메서드 재정의
+			System.out.println(b);
 		}
 	}
 	
@@ -47,12 +42,11 @@ public class BoardService {
 			System.out.println("찾을 수 없는 글입니다");
 		}else {
 			boardDTO.increaseCnt();
-			System.out.println("글번호\t제목\t작성자\t조회수\t게시일");
+			System.out.println("글번호\t제목\t\t작성자\t조회수\t게시일");
 			System.out.println("--------------------------------------");
 			boardDTO.print();
 		}
 	}
-	
 	public void update() {
 		System.out.print("수정할 글번호> ");
 		String bno = sc.next();sc.nextLine();
@@ -68,7 +62,10 @@ public class BoardService {
 //			boardDTO.setWriter(sc.next());
 			String updateWriter = sc.next();
 			sc.nextLine();
-			if(br.updateNew(bno, updateTitle, updateWriter)) {
+			BoardDTO boardDTO = new BoardDTO(updateTitle, updateWriter);
+			System.out.println("새로운 생성자: " + boardDTO);
+//			if(br.updateNew(bno, updateTitle, updateWriter)) {
+			if(br.update(boardDTO, bno)) {
 				System.out.println("업데이트 성공");
 			}else {
 				System.out.println("업데이트 실패");
@@ -76,15 +73,19 @@ public class BoardService {
 		}
 	}
 	
+	// refactoring
 	public void delete() {
 		System.out.print("삭제할 글번호> ");
 		String bno = sc.next();sc.nextLine();
-		if(br.delete(bno)) {
+		boolean result = br.delete(bno);
+//		if(br.delete(bno)) {
+		if(result) {
 			System.out.println("삭제완료");
 		}else {
 			System.out.println("삭제실패");
 		}
 	}
+	
 	
 }
 
