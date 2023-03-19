@@ -22,8 +22,20 @@ public class ClientService {
 
 	public void save() {
 		ClientDTO clientDTO = new ClientDTO();
-		System.out.print("id> ");
-		clientDTO.setId(sc.next());
+		boolean checkResult = true;
+		String id = null;
+		do {
+			System.out.print("id> ");
+			id = sc.next();
+			if (repository.checkId(id)) {
+				System.out.println("사용가능합니다.");
+				checkResult = false;
+			} else {
+				System.out.println("이미 사용중인 id 입니다.");
+			}
+		} while (checkResult);
+
+		clientDTO.setId(id);
 		System.out.print("password> ");
 		clientDTO.setPassword(sc.next());
 		System.out.print("name> ");

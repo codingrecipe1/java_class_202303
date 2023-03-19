@@ -20,13 +20,12 @@ public class ClientRepository {
 	}
 	
 	public boolean loginCheck(String id, String password) {
-		for(String key: clientMap.keySet()) {
-			if(id.equals(clientMap.get(key).getId()) && 
-					password.equals(clientMap.get(key).getPassword())) {
-				return true;
-			}
+		if(clientCheck(id, password) != null) {
+			return true;
+		} else {
+			return false;
 		}
-		return false;
+		
 	}
 	
 	public Map<String, ClientDTO> findAll() {	
@@ -34,13 +33,12 @@ public class ClientRepository {
 	}
 	
 	public ClientDTO findById(String loginId, String loginPassword) {
-		for(String key: clientMap.keySet()) {
-			if(loginId.equals(clientMap.get(key).getId()) && 
-					loginPassword.equals(clientMap.get(key).getPassword())) {
-				return clientMap.get(key);
-			}
+		String key = clientCheck(loginId, loginPassword); 
+		if(key != null) {
+			return clientMap.get(key);
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
 	public List<BreakdownDTO> breakList(String account) {
@@ -53,14 +51,13 @@ public class ClientRepository {
 		return list;
 	}
 	
-	public String getAccount(String loginId, String loginPassword) {
-		for(String key: clientMap.keySet()) {
-			if(loginId.equals(clientMap.get(key).getId()) && 
-					loginPassword.equals(clientMap.get(key).getPassword())) {
-				return clientMap.get(key).getAccount();
-			}
+	public String getAccount(String loginId, String loginPassword) {		
+		String key = clientCheck(loginId, loginPassword); 
+		if(key != null) {
+			return clientMap.get(key).getAccount();
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
 	public boolean deposit(String account, long money) {
@@ -78,6 +75,7 @@ public class ClientRepository {
 		}
 		return false;
 	}
+	
 	public boolean withdraw(String account, long money) {
 		for(String key: clientMap.keySet()) {
 			if(clientMap.get(key).getAccount().equals(account)) {
@@ -106,25 +104,58 @@ public class ClientRepository {
 	}
 	
 	public boolean update(String loginId, String loginPassword, String updatePassword) {
-		for(String key: clientMap.keySet()) {
-			if(loginId.equals(clientMap.get(key).getId()) && 
-					loginPassword.equals(clientMap.get(key).getPassword())) {
-				clientMap.get(key).setPassword(updatePassword);
-				return true;
-			}
+//		for(String key: clientMap.keySet()) {
+//			if(loginId.equals(clientMap.get(key).getId()) && 
+//					loginPassword.equals(clientMap.get(key).getPassword())) {
+//				clientMap.get(key).setPassword(updatePassword);
+//				return true;
+//			}
+//		}
+//		return false;
+		String key = clientCheck(loginId, loginPassword); 
+		if(key != null) {
+			clientMap.get(key).setPassword(updatePassword);
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 	
 	public boolean delete(String loginId, String loginPassword) {
+//		for(String key: clientMap.keySet()) {
+//			if(loginId.equals(clientMap.get(key).getId()) && 
+//					loginPassword.equals(clientMap.get(key).getPassword())) {
+//				clientMap.remove(key);
+//				return true;
+//			}
+//		}
+//		return false;
+		String key = clientCheck(loginId, loginPassword); 
+		if(key != null) {
+			clientMap.remove(key);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean checkId(String id) {
 		for(String key: clientMap.keySet()) {
-			if(loginId.equals(clientMap.get(key).getId()) && 
-					loginPassword.equals(clientMap.get(key).getPassword())) {
-				clientMap.remove(key);
-				return true;
+			if(id.equals(clientMap.get(key).getId())) {
+				return false; 
 			}
 		}
-		return false;
+		return true;
+	}
+	
+	private String clientCheck(String id, String password) {
+		for(String key: clientMap.keySet()) {
+			if(id.equals(clientMap.get(key).getId()) && 
+					password.equals(clientMap.get(key).getPassword())) {
+				return key;
+			}
+		}
+		return null;
 	}
 
 }
